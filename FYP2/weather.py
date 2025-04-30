@@ -504,9 +504,9 @@ def daily_page():
                 response = requests.get(url)
    
                 # Display accuracy on the Streamlit page
-                st.write(f'Model Accuracy: {accuracy:}')
-                st.text('Classification Report:')
-                st.text(report)
+                # st.write(f'Model Accuracy: {accuracy:}')
+                # st.text('Classification Report:')
+                # st.text(report)
 
 
                 if response.status_code == 200:
