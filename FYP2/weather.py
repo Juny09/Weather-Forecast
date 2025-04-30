@@ -592,6 +592,32 @@ def news_page():
     else:
         st.error("Failed to fetch news data. Please check your API key and try again.")
 
+def generate_weather_explanation(row):
+    reasons = []
+    suggestions = []
+
+    # Reasoning
+    if row['Rain'] > 5:
+        reasons.append("A low-pressure system is likely causing rainfall.")
+        suggestions.append("Carry an umbrella and avoid outdoor activities.")
+    elif row['Snow'] > 1:
+        reasons.append("Cold air mass present leading to snow.")
+        suggestions.append("Wear warm clothes and drive carefully.")
+    elif row['Temp_Max'] > 30:
+        reasons.append("A heatwave might be approaching.")
+        suggestions.append("Stay hydrated and avoid direct sunlight.")
+    elif row['Temp_Min'] < 10:
+        reasons.append("A cold front is present.")
+        suggestions.append("Dress warmly and limit time outdoors.")
+    elif row['Clouds'] > 75:
+        reasons.append("Thick cloud cover due to high moisture in the atmosphere.")
+        suggestions.append("You may not need sunglasses today.")
+    else:
+        reasons.append("Weather is stable due to high pressure.")
+        suggestions.append("A great day to be outside!")
+
+    return " ".join(reasons), " ".join(suggestions)
+
 # Function to fetch air pollution data
 def fetch_air_pollution_data(lat, lon):
     air_pollution_url = f"http://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid={api_key}"
@@ -685,6 +711,10 @@ def display_daily_forecast_layout(Dforecast_df):
                     st.metric(label="🔽 Pressure", value=f"{row['Pressure']} hPa")
                 with col4:
                     st.markdown(f"<h6 style='text-align: center; margin-bottom:0;'>🌤️ Predictions</h6> <h3 style='text-align: center;'>{row['Predictions']}</h3>", unsafe_allow_html=True)
+                    reason, suggestion = generate_weather_explanation(row)
+                    st.markdown(f"**Reason:** {reason}")
+                    st.markdown(f"**Suggestion:** {suggestion}")
+
                     pass
                 st.markdown("---")
 
